@@ -41,11 +41,11 @@ class Calculator extends React.Component {
     this.changeConvertToUnit = this.changeConvertToUnit.bind(this);
     this.changeBaseAmount = this.changeBaseAmount.bind(this);
     this.changeConvertAmount = this.changeConvertAmount.bind(this);
-    this.state = { baseUnit: 'Cups', convertToUnit: 'Ounces', baseAmount: 1, result: '', chosenPick: ''};
+    this.state = { baseUnit: 'Cups', convertToUnit: 'Ounces', baseAmount: 1, chosenPick: ''};
   }
   
   changeBaseUnit(selectedValue) {
-    this.setState({ baseUnit: 'selectedValue'});
+    this.setState({ baseUnit: selectedValue});
   }
 
   changeConvertToUnit(e) {
@@ -54,9 +54,9 @@ class Calculator extends React.Component {
     });
   }
 
-  changeBaseAmount(text) {
+  changeBaseAmount(value) {
     this.setState({
-      baseAmount: text
+      baseAmount: value
     });
   }
 
@@ -68,23 +68,23 @@ class Calculator extends React.Component {
 
   toCups = (value) => {
     if (this.state.baseUnit === 'Ounces') {
-      return value / 8;
+      return String(value / 8);
     } else {
-      return value;
+      return String(value);
     }
   }
 
   toOunces = (value) => {
     if (this.state.baseUnit === 'Cups') {
-      return value * 8;
+      return String(value * 8);
     } else {
-      return value;
+      return String(value);
     }
   }
 
   toQuarts = (value) => {
     if (this.state.baseUnit === 'Cups') {
-      return value / 4;
+      return String(value / 4);
     }
   }
 
@@ -98,24 +98,8 @@ class Calculator extends React.Component {
     }
   }
 
-  quarts() {
-    if (this.state.baseUnit === 'Quarts') {
-      return getConvertedAmount(this.state.baseAmount, this.toQuarts);
-    } else {
-      return this.state.baseAmount
-    }
-  }
-
-  ounces() {
-    if (this.state.baseUnit === 'Ounces') {
-      return getConvertedAmount(this.state.baseAmount, this.toOunces);
-    } else {
-      return this.state.baseAmount
-    }
-  }
-
   render() {
-    const {baseUnit,convertToUnit, baseAmount} = this.state;
+    const {baseUnit, convertToUnit, baseAmount} = this.state;
     const scaleChoice = SCALES.map(scale =>
       <Picker.Item label={scale} key={scale} value={scale} />
     );
@@ -128,8 +112,8 @@ class Calculator extends React.Component {
             <View>
               <Text style={styles.header}>Unit in {baseUnit}</Text>
               <View className="input-select">
-                <TextInput keyboardType={'numeric'} style={styles.input} defaultValue={String(baseAmount)}
-                  onChange={(text) => this.changeBaseAmount(text)} />
+                <TextInput keyboardType={'numeric'} style={styles.input} value={String(baseAmount)}
+                  onChangeText={(value) => this.changeBaseAmount(value)} />
                 <View className="select">
                   <Picker selectedValue={baseUnit} onValueChange={(itemValue) => this.setState({ baseUnit: itemValue })}>
                      {scaleChoice}
@@ -140,8 +124,8 @@ class Calculator extends React.Component {
             <View>
               <Text style={styles.header}>Unit in {convertToUnit}</Text>
               <View className="input-select">
-                <TextInput keyboardType={'numeric'} style={styles.input} defaultValue={String(result)}
-                  onChange={this.changeConvertAmount} />
+                <TextInput keyboardType={'numeric'} style={styles.input} value={String(result)}
+                  onChangeText={(text) => this.changeConvertAmount(text)} />
                 <View className="select">
                   <Picker selectedValue={convertToUnit} onValueChange={(itemValue) => this.setState({ convertToUnit: itemValue })}>
                     {scaleChoice}
